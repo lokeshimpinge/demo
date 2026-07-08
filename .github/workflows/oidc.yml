@@ -1,21 +1,21 @@
 name: Deploy to AWS
-on: [push]
+on: push
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # Required for OIDC
-      contents: read    # Required for actions/checkout
+      id-token: write  # Required for OIDC
+      contents: read
     
     steps:
       - uses: actions/checkout@v4
       
-      - name: Configure AWS credentials
-        uses: lokeshimpinge/aws-oidc-action@v1
+      - name: Login to AWS
+        uses: KoalaOps/login-aws@v1
         with:
+          role_to_assume: arn:aws:iam::381491967540:role/github-action
           aws_region: us-east-1
-          role_to_assume: ${{ secrets.AWS_OIDC_ROLE }}
       
       - name: Run AWS CLI command
         run: aws s3 ls
