@@ -1,21 +1,21 @@
-name: AWS OIDC Connect Demo GA
-on: push
-
-permissions:
-  id-token: write
-  contents: read
+name: Deploy to AWS
+on: [push]
 
 jobs:
-  simple_example:
+  deploy:
     runs-on: ubuntu-latest
-    name: Export AWS variables with a temporary session
+    permissions:
+      id-token: write   # Required for OIDC
+      contents: read    # Required for actions/checkout
+    
     steps:
-      - name: Fetch credentials
-        uses: dflook/configure-oidc-aws-credentials@v1
+      - uses: actions/checkout@v4
+      
+      - name: Configure AWS credentials
+        uses: your-org/aws-oidc-action@v1
         with:
-          role-arn: arn:aws:iam::381491967540:role/github-action
-          export-variables: true
-
-      - name: Test credentials
+          aws_region: us-east-1
+          role_to_assume: ${{ secrets.AWS_OIDC_ROLE }}
+      
+      - name: Run AWS CLI command
         run: aws s3 ls
-
