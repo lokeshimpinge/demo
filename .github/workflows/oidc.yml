@@ -1,0 +1,24 @@
+name: Deploy to AWS
+
+on:
+  push:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to AWS
+        uses: KoalaOps/login-aws@v1
+        with:
+          role_to_assume: arn:aws:iam::381491967540:role/oidc-role
+          aws_region: us-east-1
+
+      - name: List S3 Buckets
+        run: aws s3 ls
