@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Configure AWS credentials
-        uses: your-org/aws-oidc-action@v1
+        uses: lokeshimpinge/aws-oidc-action@v1
         with:
           aws_region: us-east-1
           role_to_assume: ${{ secrets.AWS_OIDC_ROLE }}
