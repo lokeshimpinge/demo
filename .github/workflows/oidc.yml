@@ -1,24 +1,28 @@
-name: Deploy to AWS
-
+name: AWS OIDC Connect Demo GA
 on:
-  push:
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    permissions:
+  push
+env:
+  AWS_REGION : "eu-west-2"   
+permissions:
       id-token: write
       contents: read
-
+jobs:
+  DemoOIDC:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Git clone the repository
+        uses: actions/checkout@v3
 
-      - name: Login to AWS
-        uses: KoalaOps/login-aws@v1
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          role_to_assume: arn:aws:iam::381491967540:role/oidc-role
-          aws_region: us-east-1
+          role-to-assume: ${{ vars.ARN }}
+          role-session-name: ${{ secrets.ROLENAME }}
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: List S3 Buckets
-        run: aws s3 ls
+  
+      - name: Print assumed role
+        run: aws sts get-caller-identity
+        
+      - name: list aws s3 bucket
+        run: aws s3 ls 
